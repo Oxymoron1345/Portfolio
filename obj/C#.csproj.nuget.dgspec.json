@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\bestp\\Documents\\C#\\C#.csproj": {}
+    "C:\\Users\\bestp\\Documents\\CS\\Portfolio\\C#.csproj": {}
   },
   "projects": {
-    "C:\\Users\\bestp\\Documents\\C#\\C#.csproj": {
+    "C:\\Users\\bestp\\Documents\\CS\\Portfolio\\C#.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\bestp\\Documents\\C#\\C#.csproj",
+        "projectUniqueName": "C:\\Users\\bestp\\Documents\\CS\\Portfolio\\C#.csproj",
         "projectName": "C#",
-        "projectPath": "C:\\Users\\bestp\\Documents\\C#\\C#.csproj",
+        "projectPath": "C:\\Users\\bestp\\Documents\\CS\\Portfolio\\C#.csproj",
         "packagesPath": "C:\\Users\\bestp\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\bestp\\Documents\\C#\\obj\\",
+        "outputPath": "C:\\Users\\bestp\\Documents\\CS\\Portfolio\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\bestp\\AppData\\Roaming\\NuGet\\NuGet.Config"

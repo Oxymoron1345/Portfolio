@@ -1,6 +1,8 @@
-﻿    // public static void Main(string[] args) {
-    //     Console.WriteLine("Helloey");
-    // }
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace DataStructures {
     public class Node<T> {
@@ -24,24 +26,68 @@ namespace DataStructures {
     }
 
     public class DyanamicArray<Atype> {
-        public void Add(Atype item, int pos) {
+        private Atype[] data;
+        private int size;
 
+        public DyanamicArray() {
+            data = new Atype[0];
+        }
+
+        public void Add(Atype item, int pos) {
+            if (pos > size || pos < 0) {
+                throw new IndexOutOfRangeException("Out of Range");
+            }
+
+            data[pos] = item;
+
+            for (int i = pos; i < size - 1; i++) {
+                data[i] = data[i + 1];
+            }
+            
+            size++ ;
+
+            if (pos == size) {
+                int sizeNew = data.Length * 2;
+                Array.Resize(ref data, sizeNew);
+            }
         }
 
         public Atype Remove(int pos) {
+            if (pos >= size || pos < 0) {
+                throw new IndexOutOfRangeException("Out of Range");
+            }
 
+            Atype itemRemoved = data[pos];
+            
+            for (int i = pos; i < size - 1; i++) {
+                data[i] = data[i + 1];
+            }
+            
+            size-- ;
+
+            return itemRemoved;
         }
 
         public Atype Get(int pos) {
-
+            if (pos >= size || pos < 0) {
+                throw new IndexOutOfRangeException("Out of Range");
+            }
+            
+            return data[pos];
         }
 
-        public Atype Set(int pos) {
+        public Atype Set(Atype val, int pos) {
+            if (pos >= size || pos < 0) {
+                throw new IndexOutOfRangeException("Out of Range");
+            }
 
+            Atype valOld = data[pos];
+            data[pos] = val;
+            return valOld;
         }
 
         public int Size() {
-            return 0;
+            return size;
         }
 
     }
@@ -50,8 +96,7 @@ namespace DataStructures {
         internal class LListNode<T> : Node<T> {
             public LListNode<T>? next, prev;
 
-            public LListNode(T val, LListNode<T>? next = null, LListNode<T>? prev = null) : base(val)
-            {
+            public LListNode(T val, LListNode<T>? next = null, LListNode<T>? prev = null) : base(val) {
                 this.next = next;
                 this.prev = prev;
             }
@@ -87,16 +132,12 @@ namespace DataStructures {
                     node.next = new LListNode<Ltype>(val);
                     node = node.next;
                 }
-                size++;
+                size++ ;
             }
             tail = node;
         }
 
         public void AddAt(Ltype item, int pos) {
-            // if (pos >= size) {
-            //     throw new IndexOutOfRangeException("");
-            // }
-
             var node = head;
             
             for (int i = 0; i < pos - 1; i++) {
@@ -108,17 +149,13 @@ namespace DataStructures {
         }
 
         public Ltype RemoveAt(int pos) {
-            // if(pos >= size) {
-            //     throw new ArgumentException();
-            // }
-            // if(head == null) {
-            //     throw new ArgumentException();
-            // }
+            if (pos >= size || pos < 0) {
+                throw new IndexOutOfRangeException("Out of Range");
+            }
 
             var node = head;
             
-            for (int i = 0; i < pos; i++)
-            {
+            for (int i = 0; i < pos; i++) {
                 if(node.next != null)
                 {
                     node = node.next;
@@ -126,47 +163,78 @@ namespace DataStructures {
                 
             }
 
-            if (node.prev != null)
-            {
+            if (node.prev != null) {
                 node.prev.next = node.next;
             }
-            else
-            { head = node.next; }
+            else { 
+                head = node.next; 
+            }
 
-            if (node.next != null)
-            {
+            if (node.next != null) {
                 node.next.prev = node.prev;
             }
-            else
-            {
+            else {
                 tail = node.prev;
             }
-            size--;
+            size-- ;
+            
             return node.Data;
         }
 
-        public Ltype this[int i] {
-            get => Get(i);
-            set => AddAt(value, i);
-        }
-
         public Ltype Get(int pos) {
-            // if (pos >= size) {
-            //     throw new IndexOutOfRangeException();
-            // }
+            if (pos >= size || pos < 0) {
+                throw new IndexOutOfRangeException("Out of Range");
+            }
+            
             var node = head;
 
             for (int i = 0; i < pos; i++) {
                 node = node.next;
             }
-            // if(node == null) {
-            //     throw new ArgumentException("Null Node found");
-            // }
-
+            
             return node.Data;
+        }
+
+        public Ltype Set(Ltype val, int pos) {
+            if (pos >= size || pos < 0) {
+                throw new IndexOutOfRangeException("Out of Range");
+            }
+
+            AddAt(val, pos);
         }
         
         private int Size() {
+            return size;
+        }
+    }
+
+    public class Stack<Stype> {
+        private DyanamicArray<Stype> stack;
+        private int size;
+        public Stack () {
+            stack = new DyanamicArray<Stype>();
+        }
+
+        public void push(Stype item) {
+            stack.Add(item, size);
+            size++ ;
+        }
+
+        public Stype Pop() {
+            if (size == 0) {
+                throw new InvalidOperationException("Stack is empty");
+            }
+
+            Stype itemPopped = stack.Get(size - 1);
+            stack.Remove(size - 1);
+            return itemPopped;
+        }
+
+        public Stype Peek() {
+            return stack.Get(size -1);
+        }
+
+        public int Size() {
             return size;
         }
     }
