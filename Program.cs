@@ -336,6 +336,11 @@ namespace DataStructures {
 
         }
         public static void Sort(int[] list) {
+            int size = list.Length;
+            if (size == 0) {
+                throw new InvalidOperationException("List is empty");
+            }
+            
             int left = 0;
             int right = list.Length - 1; 
 
