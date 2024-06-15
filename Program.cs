@@ -238,4 +238,36 @@ namespace DataStructures {
             return size;
         }
     }
+
+    public class Queue<Qtype> {
+        private DyanamicArray<Qtype> queue;
+        private int size;
+        public Queue () {
+            
+        }
+
+        public void Enqueue(Qtype item) {
+
+        }
+
+        public Qtype Peek() {
+            
+        }
+
+        public int Size() {
+            return size;
+        }
+    }
+
+    public class InsertionSort {
+        public static void Sort(int[] list) {
+            
+        }
+    }
+
+    public class MergeSort {
+        public static void Sort(int[] list) {
+
+        }
+    }
 }
