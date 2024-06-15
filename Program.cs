@@ -210,7 +210,7 @@ namespace DataStructures {
 
     public class Stack<Stype> {
         private DyanamicArray<Stype> stack;
-        private int size;
+        private int size = 0;
         public Stack () {
             stack = new DyanamicArray<Stype>();
         }
@@ -227,6 +227,7 @@ namespace DataStructures {
 
             Stype itemPopped = stack.Get(size - 1);
             stack.Remove(size - 1);
+            size-- ;
             return itemPopped;
         }
 
@@ -241,17 +242,29 @@ namespace DataStructures {
 
     public class Queue<Qtype> {
         private DyanamicArray<Qtype> queue;
-        private int size;
+        private int size = 0;
         public Queue () {
-            
+            queue = new DyanamicArray<Qtype>();
         }
 
         public void Enqueue(Qtype item) {
+            queue.Add(item, size);
+            size++
+        }
 
+        public Qtype Dequeue() {
+            if (size == 0) {
+                throw new InvalidOperationException("Queue is empty");
+            }
+
+            Qtype itemDequeued = queue.Get(0);
+            queue.Remove(0);
+            size-- ;
+            return itemDequeued;
         }
 
         public Qtype Peek() {
-            
+            return queue.Get(0);
         }
 
         public int Size() {
@@ -261,13 +274,78 @@ namespace DataStructures {
 
     public class InsertionSort {
         public static void Sort(int[] list) {
-            
+            int size = list.Length;
+            if (size == 0) {
+                throw new InvalidOperationException("List is empty");
+            }
+            for (int i = 1; i < size; i++) {
+                int key = list[i];
+                int j = list[i - 1];
+
+                while (j >= 0 && list[j] > key) {
+                    list[j + 1] = list[j];
+                    j = j - 1;
+                }
+                list[j + 1] = key;
+            }
         }
     }
 
     public class MergeSort {
-        public static void Sort(int[] list) {
+        void merge (int [] list, int left, int mid, int right) {
+            int n1 = mid - left + 1;
+            int n2 = right - mid;
 
+            int[] arrayLeft = new int[n1];
+            int[] arrayRight = new int[n2];
+            int i, j;
+
+            for (i = 0; i < n1; i++) {
+                arrayLeft[i] = list[1 + i];
+            }
+            for (j = 0; j < n2; j++) {
+                arrayRight[j] = list[m + 1 + j];
+            }
+
+            i = 0;
+            j = 0;
+
+            int k = left;
+
+            while (i < n1 && j < n2) {
+                if (arrayLeft[i] <= arrayRight[j]) {
+                    list[k] = arrayLeft[i];
+                    i++ ;
+                }
+                else {
+                    list[k] = arrayRight[j];
+                    j++ ;
+                }
+                k++ ;
+            }
+            while (i < n1) {
+                list[k] = arrayLeft[i];
+                i++ ;
+                k++ ;
+            }
+            while (j < n2) {
+                list[k] = arrayRight[j];
+                j++ ;
+                k++ ;
+            }
+
+        }
+        public static void Sort(int[] list) {
+            int left = 0;
+            int right = list.Length - 1; 
+
+            if (left < right) {
+                int mid = left + (right - l) / 2;
+                
+                sort(list);
+                
+                merge(list, left, mid, right);
+            }
         }
     }
 }
