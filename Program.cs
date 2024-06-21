@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿// using System;
+// using System.Collections.Generic;
+// using System.Linq;
+// using System.Text;
+// using System.Threading.Tasks;
 
 namespace DataStructures {
     public class Node<T> {
@@ -292,7 +292,7 @@ namespace DataStructures {
     }
 
     public class MergeSort {
-        void merge (int [] list, int left, int mid, int right) {
+        private void merge (int [] list, int left, int mid, int right) {
             int n1 = mid - left + 1;
             int n2 = right - mid;
 
@@ -349,8 +349,56 @@ namespace DataStructures {
                 
                 sort(list);
                 
-                merge(list, left, mid, right);
+                MergeSort.merge(list, left, mid, right);
             }
+        }
+    }
+
+    public class TreeNode {
+        public TreeNode? parent, right, left;
+    }
+    public class BinaryTree {
+        public BinaryTree() {
+            
+        }
+
+        public void Add(int val) {
+
+        }
+
+        public int? Remove(int val) {
+
+        }
+
+        //internal BTreeAdd(BtreeNode curr, int val) {}
+
+        //internal BtreeRemove(BtreeNode curr, int val) {}
+
+        public bool Has(int val) {
+
+        }
+
+        public int Height() {
+
+        }
+    }
+
+    public class AVL {
+        TreeNode Restructure(TreeNode x) {
+
+        }
+
+        void Rotate(TreeNode x) {
+
+        }
+
+        bool IsBalanced(TreeNode x) {
+            if () {
+
+            }
+            else {
+                return false;
+            } 
         }
     }
 }
