@@ -4,12 +4,6 @@
 // using System.Text;
 // using System.Threading.Tasks;
 
-using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.Design.Serialization;
-using System.Runtime.CompilerServices;
-using System.Transactions;
-
 namespace DataStructures {
     public class Node<T> {
         private T data;
