@@ -4,6 +4,12 @@
 // using System.Text;
 // using System.Threading.Tasks;
 
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.Design.Serialization;
+using System.Runtime.CompilerServices;
+using System.Transactions;
+
 namespace DataStructures {
     public class Node<T> {
         private T data;
@@ -201,6 +207,7 @@ namespace DataStructures {
             }
 
             AddAt(val, pos);
+            return val;
         }
         
         private int Size() {
@@ -249,7 +256,7 @@ namespace DataStructures {
 
         public void Enqueue(Qtype item) {
             queue.Add(item, size);
-            size++
+            size++;
         }
 
         public Qtype Dequeue() {
@@ -292,7 +299,7 @@ namespace DataStructures {
     }
 
     public class MergeSort {
-        private void merge (int [] list, int left, int mid, int right) {
+        void merge (int [] list, int left, int mid, int right) {
             int n1 = mid - left + 1;
             int n2 = right - mid;
 
@@ -304,7 +311,7 @@ namespace DataStructures {
                 arrayLeft[i] = list[1 + i];
             }
             for (j = 0; j < n2; j++) {
-                arrayRight[j] = list[m + 1 + j];
+                arrayRight[j] = list[mid + 1 + j];
             }
 
             i = 0;
@@ -337,6 +344,7 @@ namespace DataStructures {
         }
         public static void Sort(int[] list) {
             int size = list.Length;
+            MergeSort Merge = new MergeSort();
             if (size == 0) {
                 throw new InvalidOperationException("List is empty");
             }
@@ -345,60 +353,370 @@ namespace DataStructures {
             int right = list.Length - 1; 
 
             if (left < right) {
-                int mid = left + (right - l) / 2;
+                int mid = left + (right - left) / 2;
                 
-                sort(list);
+                Sort(list);
                 
-                MergeSort.merge(list, left, mid, right);
+                Merge.merge(list, left, mid, right);
             }
         }
     }
 
-    public class TreeNode {
-        public TreeNode? parent, right, left;
-    }
     public class BinaryTree {
+        protected class TreeNode : Node<int> {
+            public TreeNode? parent, right, left;
+
+            public TreeNode(int val) : base(val) {
+                parent = null;
+                right = null;
+                left = null;
+            }
+        }
+
+        protected TreeNode? root;
+
         public BinaryTree() {
-            
+            root = null;
+        }
+
+        public bool Has(int val) {
+            return FindNode(root, val) != null;
+        }
+
+        private TreeNode? FindNode(TreeNode? curr, int val) {
+            if (curr.Data == val) {
+                return curr;
+            }
+            else if (val > curr.Data) {
+                return FindNode(curr.right, val);
+            }
+            else {
+                return FindNode(curr.left, val);
+            }
         }
 
         public void Add(int val) {
+            root = TreeAdd(root, val);
+        }
 
+        virtual protected TreeNode? TreeAdd(TreeNode curr, int val) {
+            if (val > curr.Data) {
+                curr.right = TreeAdd(curr.right, val);
+                if (curr.right == null) {
+                    curr.right.parent = curr;
+                }
+            }
+            else {
+                curr.left = TreeAdd(curr.left, val);
+                if (curr.left == null) {
+                    curr.left.parent = curr;
+                }
+            }
+
+            return curr;
         }
 
         public int? Remove(int val) {
-
+            TreeNode? removal = FindNode(root, val);
+            
+            if (removal != null) {
+                root = TreeRemove(removal);
+                return val;
+            }
+            else {
+                return null;
+            }
         }
 
-        //internal BTreeAdd(BtreeNode curr, int val) {}
+        virtual protected TreeNode? TreeRemove(TreeNode? removal) {
+            TreeNode? right = removal.right;
+            TreeNode? left = removal.left;
+            
+            if (removal == null) {
+                return null;
+            }
+            //Case 1(0)
+            else if (left == null && right == null) {
+                removal = null;
+            }
+            //Case 2(1)
+            else if (left == null || right == null) {
+                if (left == null) {
+                    TreeNode? child = right;
+                    child.parent = removal.parent;
+                    removal.parent.right = child;
+                    
+                }
+                else {
+                    TreeNode? child = left;
+                    child.parent = removal.parent;
+                    removal.parent.left = child;
+                }
+            }
+            //Case 3(2)
+            else {
+                TreeNode successor = FindSuccessor(removal);
+                removal.Data = successor.Data;
+                TreeRemove(successor);
+            }
+            return removal;
+        }
 
-        //internal BtreeRemove(BtreeNode curr, int val) {}
+        private static TreeNode FindSuccessor(TreeNode DeadNode)
+        {
+            TreeNode successor = DeadNode.left;
 
-        public bool Has(int val) {
-
+            while (successor.right != null) {
+                successor = successor.right;
+            }
+            return successor;
         }
 
         public int Height() {
+            return FindHeight(root);
+        }
 
+        protected int FindHeight(TreeNode? node) {
+            int leftHeight = FindHeight(node.left);
+            int rightHeight = FindHeight(node.right);
+
+            return 1 + Math.Max(leftHeight, rightHeight);
         }
     }
 
     public class AVL {
-        TreeNode Restructure(TreeNode x) {
+        public class TreeNode : Node<int> {
+            public TreeNode? parent, right, left;
+            
+            public int height;
 
+            public TreeNode(int val) : base(val) {
+                parent = null;
+                right = null;
+                left = null;
+                height = 1;
+            }
         }
 
-        void Rotate(TreeNode x) {
+        protected TreeNode? root;
 
+        public AVL () {
+            root = null;
         }
 
-        bool IsBalanced(TreeNode x) {
-            if () {
+        public bool Has(int val) {
+            return FindNode(root, val) != null;
+        }
 
+        private TreeNode? FindNode(TreeNode? curr, int val) {
+            if (curr.Data == val) {
+                return curr;
+            }
+            else if (val > curr.Data) {
+                return FindNode(curr.right, val);
             }
             else {
-                return false;
-            } 
+                return FindNode(curr.left, val);
+            }
+        }
+
+        public void Add(int val) {
+            root = TreeAdd(root, val);
+        }
+
+        virtual protected TreeNode? TreeAdd(TreeNode curr, int val) {
+            if (val > curr.Data) {
+                curr.right = TreeAdd(curr.right, val);
+                if (curr.right == null) {
+                    curr.right.parent = curr;
+                }
+            }
+            else {
+                curr.left = TreeAdd(curr.left, val);
+                if (curr.left == null) {
+                    curr.left.parent = curr;
+                }
+            }
+
+            curr.height = 1 + Math.Max(Height(curr.left), Height(curr.right));
+
+            int balance = Balance(curr);
+
+            if (IsBalanced(curr)) {
+                return curr;
+            }
+            else {
+                Restructure(curr);
+                return curr;
+            }
+        }
+
+        public int? Remove(int val) {
+            TreeNode? removal = FindNode(root, val);
+            
+            if (removal != null) {
+                root = TreeRemove(removal, val);
+                return val;
+            }
+            else {
+                return null;
+            }
+        }
+
+        virtual protected TreeNode? TreeRemove(TreeNode? removal, int val) {
+            TreeNode? right = removal.right;
+            TreeNode? left = removal.left;
+            
+            if (removal == null) {
+                return null;
+            }
+
+            if (val > removal.Data) {
+                right = TreeRemove(right, val);
+            }
+            else if (val < removal.Data) {  
+                left = TreeRemove(left, val);
+            }
+            else {
+                TreeNode? node = FindSuccessor(removal.right);
+                removal.Data = node.Data;
+                right = TreeRemove(right, node.Data);
+            }
+
+            removal.height = 1 + Math.Max(Height(left), Height(left));
+
+            int balance = Balance(removal);
+
+            if (IsBalanced(removal)) {
+                return removal;
+            }
+            else {
+                Restructure(removal);
+                return removal;
+            }
+        }
+
+        private static TreeNode FindSuccessor(TreeNode DeadNode)
+        {
+            TreeNode successor = DeadNode;
+
+            while (successor.right != null) {
+                successor = successor.right;
+            }
+            return successor;
+        }
+
+        public int Height(TreeNode? x) {
+            return FindHeight(x);
+        }
+
+        protected int FindHeight(TreeNode? node) {
+            return node.height;
+        }
+
+        public TreeNode? Restructure(TreeNode x) {
+            TreeNode? parent = x.parent;
+            TreeNode? grParent = parent.parent;
+
+            if (parent == grParent.left) {
+                // Left, left child
+                if (x == parent.left) {
+                    Rotate(grParent);
+                    return grParent;
+                }
+                // Left, right child
+                else {
+                    Rotate(parent);
+                    Rotate(parent);
+                    return parent;
+                }
+            }
+            else {
+                // Right, right child
+                if (x == parent.right) {
+                    Rotate(grParent);
+                    return grParent;
+                }
+                // Right, left child
+                else {
+                    Rotate(parent);
+                    Rotate(parent);
+                    return parent;
+                }
+            }
+        }
+
+        public void Rotate(TreeNode x) {
+            TreeNode? parent = x.parent;
+            TreeNode? grParent = parent.parent;
+
+            if (parent == grParent.left) {
+                if (x == parent.left) {
+                    RotateRight(grParent);
+                }
+                else {
+                    RotateLeft(parent);
+                    RotateRight(grParent);
+                }
+            }
+            else {
+                if (x == parent.right) {
+                    RotateLeft(grParent);
+                }
+                else {
+                    RotateRight(parent);
+                    RotateLeft(grParent);
+                }
+            }
+        }
+
+        private TreeNode RotateLeft (TreeNode? x) {
+            TreeNode right = x.right;
+            TreeNode niece = right.left;
+
+            niece.left = x;
+            x.right = niece;
+
+            x.height = Math.Max(Height(x.left), Height(x.right));
+            right.height = Math.Max(Height(right.left), Height(right.right));
+
+            return right;
+        }
+
+        private TreeNode RotateRight (TreeNode? x) {
+            TreeNode left = x.left;
+            TreeNode niece = left.right;
+
+            niece.right = x;
+            x.left = niece;
+
+            x.height = Math.Max(Height(x.left), Height(x.right));
+            left.height = Math.Max(Height(left.left), Height(left.right));
+
+            return left;
+        }
+
+        public void Relink(TreeNode parent, TreeNode child, bool left) {
+            if (left) {
+                parent.left = child;
+            }
+            else {
+                parent.right = child;
+            }
+            
+            if (child != null) {
+                child.parent = parent;
+            }
+        }
+
+        public int Balance (TreeNode? x) {
+            return Height(x.left) - Height(x.right);
+        }
+
+        public bool IsBalanced(TreeNode x) {
+            int balance = Balance(x);
+
+            return Math.Abs(balance) <= 1;
         }
     }
 }
