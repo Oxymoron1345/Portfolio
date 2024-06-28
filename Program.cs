@@ -199,9 +199,9 @@ namespace DataStructures {
             if (pos >= size || pos < 0) {
                 throw new IndexOutOfRangeException("Out of Range");
             }
-
+            Ltype valOld = Get(pos);
             AddAt(val, pos);
-            return val;
+            return valOld;
         }
         
         private int Size() {
@@ -711,6 +711,28 @@ namespace DataStructures {
             int balance = Balance(x);
 
             return Math.Abs(balance) <= 1;
+        }
+    }
+
+    public class MaxHeap {
+        public MaxHeap () {
+            int[] arr = [];
+        }
+
+        public void Add(int item) {
+
+        }
+
+        public int Next () {
+
+        }
+
+        public IEnumerable<int> SortedVals() {
+            
+        }
+
+        public void HeapSort(int[] arr) {
+
         }
     }
 }
