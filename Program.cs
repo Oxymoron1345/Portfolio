@@ -1,10 +1,4 @@
-﻿// using System;
-// using System.Collections.Generic;
-// using System.Linq;
-// using System.Text;
-// using System.Threading.Tasks;
-
-namespace DataStructures {
+﻿namespace DataStructures {
     public class Node<T> {
         private T data;
 
@@ -25,11 +19,11 @@ namespace DataStructures {
         }
     }
 
-    public class DyanamicArray<Atype> {
+    public class DynamicArray<Atype> {
         private Atype[] data;
         private int size;
 
-        public DyanamicArray() {
+        public DynamicArray() {
             data = new Atype[0];
         }
 
@@ -210,10 +204,10 @@ namespace DataStructures {
     }
 
     public class Stack<Stype> {
-        private DyanamicArray<Stype> stack;
+        private DynamicArray<Stype> stack;
         private int size = 0;
         public Stack () {
-            stack = new DyanamicArray<Stype>();
+            stack = new DynamicArray<Stype>();
         }
 
         public void push(Stype item) {
@@ -242,10 +236,10 @@ namespace DataStructures {
     }
 
     public class Queue<Qtype> {
-        private DyanamicArray<Qtype> queue;
+        private DynamicArray<Qtype> queue;
         private int size = 0;
         public Queue () {
-            queue = new DyanamicArray<Qtype>();
+            queue = new DynamicArray<Qtype>();
         }
 
         public void Enqueue(Qtype item) {
@@ -715,24 +709,88 @@ namespace DataStructures {
     }
 
     public class MaxHeap {
-        public MaxHeap () {
-            int[] arr = [];
+        private DynamicArray<int> heap;
+
+        private int size;
+        public MaxHeap() {
+            heap = new DynamicArray<int>();
         }
 
         public void Add(int item) {
+            heap.Add(item, (size -1));
+            size++ ;
 
+            Heapify(size -1);
         }
 
-        public int Next () {
+        public int Next() {
+            int max = heap.Get(0);
+            int min = heap.Get(size - 1);
+            heap.Remove(0);
+            heap.Add(min, 0);
+            heap.Remove(min);
+            Heapify(0);
+            return max;
 
-        }
-
-        public IEnumerable<int> SortedVals() {
-            
         }
 
         public void HeapSort(int[] arr) {
+            MaxHeap temp = new MaxHeap();
 
+            foreach (int item in arr) {
+                temp.Add(item);
+            }
+
+            for (int i = 0; i < arr.Length; i++) {
+                arr[i] = temp.Next();
+            }
+        }
+
+        public IEnumerable<int> SortedVals() {
+            while (heap.Size() != 0) {
+                yield return Next();
+            }
+        }
+
+        public void Heapify(int pos) {
+            int parentPos = Parent(pos);
+
+            if (pos > 0 && heap.Get(pos) > heap.Get(parentPos)) {
+                while (pos > 0 && heap.Get(pos) > heap.Get(parentPos)) {
+                    int temp = heap.Get(pos);
+                    int tempParent = heap.Get(parentPos);
+                    heap.Set(heap.Get(parentPos), heap.Get(pos));
+                    heap.Set(temp, tempParent);
+                }
+            } else {
+                while (pos < heap.Size()) {
+                    int rightPos = Right(pos);
+                    int leftPos = Left(pos);
+                    int temp = pos;
+
+                    if (leftPos < heap.Size() && heap.Get(leftPos) > heap.Get(temp)) {
+                        temp = leftPos;
+                    }
+                    else if (rightPos < heap.Size() && heap.Get(rightPos) > heap.Get(temp)) {
+                        temp = rightPos;
+                    }
+                    else {
+                        break;
+                    }
+                }
+            }
+        }
+
+        protected int Right(int pos) {
+            return 2 * pos + 1;
+        }
+
+        protected int Left(int pos) {
+            return 2 * pos + 2;
+        }
+
+        protected int Parent(int pos) {
+            return (pos - 1) / 2;
         }
     }
 }
